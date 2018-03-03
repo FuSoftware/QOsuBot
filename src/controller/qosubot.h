@@ -8,10 +8,10 @@
 #include <QVector>
 #include <QDebug>
 
-#include "keysender.h"
+#include "io/keysender.h"
 
-#include "windowhandler.h"
-#include "windowhandlerworker.h"
+#include "io/windowhandler.h"
+#include "io/windowhandlerworker.h"
 
 struct Coord{
     Coord(){}

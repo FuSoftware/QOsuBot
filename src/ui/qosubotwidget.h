@@ -3,7 +3,7 @@
 
 #include <QtWidgets>
 #include <QPixmap>
-#include "qosubot.h"
+#include "controller/qosubot.h"
 
 class QOsuBotWidget : public QWidget
 {

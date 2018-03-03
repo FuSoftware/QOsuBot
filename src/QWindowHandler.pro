@@ -26,16 +26,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         widget.cpp \
-    windowhandler.cpp \
-    keysender.cpp \
-    qosubot.cpp \
-    windowhandlerworker.cpp \
-    qosubotwidget.cpp
+    io/windowhandler.cpp \
+    io/keysender.cpp \
+    controller/qosubot.cpp \
+    io/windowhandlerworker.cpp \
+    ui/qosubotwidget.cpp \
+    ai/neural/neuralnet.cpp
 
 HEADERS += \
         widget.h \
-    windowhandler.h \
-    keysender.h \
-    qosubot.h \
-    windowhandlerworker.h \
-    qosubotwidget.h
+    io/windowhandler.h \
+    io/keysender.h \
+    controller/qosubot.h \
+    io/windowhandlerworker.h \
+    ui/qosubotwidget.h \
+    ai/neural/neuralnet.h
