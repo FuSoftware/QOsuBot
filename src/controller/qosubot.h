@@ -35,14 +35,18 @@ public:
     void setCoords(QVector<Coord> coords);
 
     QColor getPixel(int x, int y, int id = 0);
-    static bool isRed(qreal r, qreal b);
-    static bool isBlue(qreal r, qreal b);
+    static bool isRed(qreal r, qreal b, qreal g);
+    static bool isBlue(qreal r, qreal b, qreal g);
+
+    int getMeanScan();
+    int getMeanProcess();
 
 signals:
     void running(bool);
     void finished();
     void pixelRead(int, QPixmap);
-    void scanTime(long);
+    void scanTime(int);
+    void processTime(int);
     void press(int key, int delay, int wait);
 
 public slots:
@@ -52,6 +56,8 @@ public slots:
 private:
     QVector<int> r_keys;
     QVector<int> b_keys;
+    QVector<int> scan_time;
+    QVector<int> process_time;
 
     bool isRunning = false;
     KeySender *s;

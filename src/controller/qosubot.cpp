@@ -31,6 +31,12 @@ void QOsuBot::hardRun()
     int i_r = 0;
     int i_b = 0;
 
+    this->scan_time.clear();
+    this->process_time.clear();
+
+    this->scan_time.resize(20);
+    this->process_time.resize(20);
+
     QVector<int> r_keys = {0x44, 0x4C};
     QVector<int> b_keys = {0x53, 0x4D};
 
@@ -41,18 +47,25 @@ void QOsuBot::hardRun()
     while(true)
     {
         bool runState;
+
+        //Monitoring
         t.restart();
 
         //State
-        getPixel(1880, 574, 0).getRgbF(&r,&g,&b);
+        getPixel(1670, 87, 0).getRgbF(&r,&g,&b);
 
-        if(r < 0.25 && g < 0.25 && b < 0.25)
+        if(r > 0.95 && g > 0.95 && b > 0.95)
         {
             runState = true;
             //Color Scan
             getPixel(390, 412, 1).getRgbF(&r,&g,&b);
 
-            if(isBlue(r,b))
+            //Monitoring
+            this->scan_time.pop_front();
+            this->scan_time.push_back(t.elapsed());
+            t.restart();
+
+            if(isBlue(r,b,g))
             {
                 if(!s->isPressed(b_keys[i_b]))
                 {
@@ -61,9 +74,8 @@ void QOsuBot::hardRun()
                     if(i_b >= b_keys.size())
                         i_b = 0;
                 }
-
             }
-            else if(isRed(r,b))
+            else if(isRed(r,b,g))
             {
                 if(!s->isPressed(r_keys[i_r]))
                 {
@@ -72,8 +84,11 @@ void QOsuBot::hardRun()
                     if(i_r >= r_keys.size())
                         i_r = 0;
                 }
-
             }
+
+            //Monitoring
+            this->process_time.pop_front();
+            this->process_time.push_back(t.elapsed());
         }
         else
         {
@@ -86,20 +101,41 @@ void QOsuBot::hardRun()
             isRunning = runState;
         }
 
-        emit scanTime(t.elapsed());
+        emit scanTime(getMeanScan());
+        emit processTime(getMeanProcess());
 
-        if(t.elapsed() > 40)
-            QThread::msleep(20);
-        QThread::msleep(10);
+        if(t.elapsed() > 10)
+            QThread::msleep(10);
+        QThread::msleep(20);
     }
 }
 
-bool QOsuBot::isRed(qreal r, qreal b)
+int QOsuBot::getMeanScan()
+{
+    int t = 0;
+
+    for(int i=0;i<this->scan_time.size();i++)
+        t += this->scan_time[i];
+
+    return t / this->scan_time.size();
+}
+
+int QOsuBot::getMeanProcess()
+{
+    int t = 0;
+
+    for(int i=0;i<this->process_time.size();i++)
+        t += this->process_time[i];
+
+    return t / this->process_time.size();
+}
+
+bool QOsuBot::isRed(qreal r, qreal b, qreal g)
 {
     return (r > 0.5 && r > b);
 }
 
-bool QOsuBot::isBlue(qreal r, qreal b)
+bool QOsuBot::isBlue(qreal r, qreal b, qreal g)
 {
     return (b > 0.5 && b > r);
 }
