@@ -2,14 +2,16 @@
 
 QOsuBotWidget::QOsuBotWidget(QVector<Coord> coordinates, QWidget *parent) : QWidget(parent)
 {
-    this->bot = new QOsuBot(328);
+    this->bot = new QOsuBot(5844);
     scan = new QLabel("Time", this);
+    process = new QLabel("Time", this);
     running = new QLabel("Run State", this);
     QPushButton *pb = new QPushButton("Start",this);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(running);
     layout->addWidget(scan);
+    layout->addWidget(process);
     layout->addWidget(pb);
 
     QHBoxLayout *pixelLayout = new QHBoxLayout;
@@ -26,14 +28,21 @@ QOsuBotWidget::QOsuBotWidget(QVector<Coord> coordinates, QWidget *parent) : QWid
 
     connect(pb,SIGNAL(clicked(bool)),this,SLOT(start()));
 
-    connect(bot,SIGNAL(scanTime(long)),this,SLOT(onScan(long)));
+    connect(bot,SIGNAL(scanTime(int)),this,SLOT(onScan(int)));
+    connect(bot,SIGNAL(processTime(int)),this,SLOT(onProcess(int)));
+
     connect(bot,SIGNAL(pixelRead(int,QPixmap)),this,SLOT(onPixel(int,QPixmap)));
     connect(bot,SIGNAL(running(bool)),this,SLOT(onRunning(bool)));
 }
 
-void QOsuBotWidget::onScan(long elapsed)
+void QOsuBotWidget::onScan(int elapsed)
 {
-    this->scan->setText(QString::number(elapsed) + QString("ms"));
+    this->scan->setText(QString("Scan : ") + QString::number(elapsed) + QString("ms"));
+}
+
+void QOsuBotWidget::onProcess(int elapsed)
+{
+    this->process->setText(QString("Process :") + QString::number(elapsed) + QString("ms"));
 }
 
 void QOsuBotWidget::onRunning(bool running)

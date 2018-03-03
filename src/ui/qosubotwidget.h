@@ -15,7 +15,8 @@ signals:
 
 public slots:
     void onRunning(bool running);
-    void onScan(long elapsed);
+    void onScan(int elapsed);
+    void onProcess(int elapsed);
     void onPixel(int id, QPixmap value);
     void start();
 
@@ -23,6 +24,7 @@ private:
     QOsuBot *bot = 0;
     QLabel *running = 0;
     QLabel *scan = 0;
+    QLabel *process = 0;
     QVector<QLabel*> pixels;
     QVector<Coord> coordinates;
 };
