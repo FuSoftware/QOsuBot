@@ -16,6 +16,8 @@ public:
 
     QPixmap getProcessScreen();
     QPixmap getPixel(int x, int y);
+    QPixmap getArea(int x, int y, int w, int h);
+    QPixmap getWindow();
 
     void setPid(unsigned long pid);
     unsigned long getPid();

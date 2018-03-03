@@ -25,6 +25,16 @@ QPixmap WindowHandler::getPixel(int x, int y)
     return s->grabWindow(this->window,x,y,1,1);
 }
 
+QPixmap WindowHandler::getArea(int x, int y, int w, int h)
+{
+    return s->grabWindow(this->window,x,y,w,h);
+}
+
+QPixmap WindowHandler::getWindow()
+{
+    return s->grabWindow(this->window);
+}
+
 void WindowHandler::setPid(unsigned long pid)
 {
     this->pid = pid;

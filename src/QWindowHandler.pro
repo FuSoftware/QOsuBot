@@ -29,15 +29,15 @@ SOURCES += \
     io/windowhandler.cpp \
     io/keysender.cpp \
     controller/qosubot.cpp \
-    io/windowhandlerworker.cpp \
     ui/qosubotwidget.cpp \
-    ai/neural/neuralnet.cpp
+    ai/neural/neuralnet.cpp \
+    io/qscreenscanner.cpp
 
 HEADERS += \
         widget.h \
     io/windowhandler.h \
     io/keysender.h \
     controller/qosubot.h \
-    io/windowhandlerworker.h \
     ui/qosubotwidget.h \
-    ai/neural/neuralnet.h
+    ai/neural/neuralnet.h \
+    io/qscreenscanner.h

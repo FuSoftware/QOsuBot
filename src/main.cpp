@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[])
 {
-    /*
+
     QApplication a(argc, argv);
 
 
@@ -17,10 +17,10 @@ int main(int argc, char *argv[])
     w.show();
 
     return a.exec();
-    */
 
+    /*
     NeuralNet n(std::vector<int> {2,4,4,1});
-
     return 0;
+    */
 
 }
