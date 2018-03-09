@@ -8,9 +8,9 @@ class QScreenScanner : public QObject
 {
     Q_OBJECT
 public:
-    QScreenScanner(WindowHandler *w, QObject *parent = nullptr);
-    QScreenScanner(WindowHandler *w, int x, int y, QObject *parent = nullptr);
-    QScreenScanner(WindowHandler *w, int x, int y, int w, int h, QObject *parent = nullptr);
+    QScreenScanner(WindowHandler *handler, QObject *parent = nullptr);
+    QScreenScanner(WindowHandler *handler, int x, int y, QObject *parent = nullptr);
+    QScreenScanner(WindowHandler *handler, int x, int y, int w, int h, QObject *parent = nullptr);
 
     enum ScanMode{
         PIXEL = 0,
@@ -32,7 +32,10 @@ private:
     bool run = true;
     int x;
     int y;
-    WindowHandler *w = 0;
+    int h;
+    int w;
+
+    WindowHandler *handler = 0;
 };
 
 #endif // WINDOWHANDLERWORKER_H

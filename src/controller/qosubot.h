@@ -11,7 +11,7 @@
 #include "io/keysender.h"
 
 #include "io/windowhandler.h"
-#include "io/windowhandlerworker.h"
+#include "io/qscreenscanner.h"
 
 struct Coord{
     Coord(){}
