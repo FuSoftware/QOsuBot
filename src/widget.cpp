@@ -12,7 +12,7 @@ Widget::Widget(QWidget *parent): QWidget(parent)
     l->addWidget(labelTime);
     l->addWidget(label);
 
-    w = new WindowHandler(328);
+    w = new WindowHandler("osu.exe");
 
     connect(le,SIGNAL(returnPressed()),this,SLOT(setPid()));
 

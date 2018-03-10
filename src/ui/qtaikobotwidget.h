@@ -1,15 +1,16 @@
-#ifndef QOSUBOTWIDGET_H
-#define QOSUBOTWIDGET_H
+#ifndef QTaikoBotWIDGET_H
+#define QTaikoBotWIDGET_H
 
 #include <QtWidgets>
 #include <QPixmap>
-#include "controller/qosubot.h"
+#include "controller/qtaikobotsync.h"
+#include "controller/qtaikobotasync.h"
 
-class QOsuBotWidget : public QWidget
+class QTaikoBotWidget : public QWidget
 {
     Q_OBJECT
 public:
-    QOsuBotWidget(QVector<Coord> coordinates, QWidget *parent = nullptr);
+    QTaikoBotWidget(QString executable, QWidget *parent = nullptr);
 
 signals:
 
@@ -21,12 +22,11 @@ public slots:
     void start();
 
 private:
-    QOsuBot *bot = 0;
+    QTaikoBot *bot = 0;
     QLabel *running = 0;
     QLabel *scan = 0;
     QLabel *process = 0;
     QVector<QLabel*> pixels;
-    QVector<Coord> coordinates;
 };
 
-#endif // QOSUBOTWIDGET_H
+#endif // QTaikoBotWIDGET_H

@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = QWindowHandler
 TEMPLATE = app
 
+CONFIG += c++11
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -28,16 +30,22 @@ SOURCES += \
         widget.cpp \
     io/windowhandler.cpp \
     io/keysender.cpp \
-    controller/qosubot.cpp \
-    ui/qosubotwidget.cpp \
+    ui/qtaikobotwidget.cpp \
     ai/neural/neuralnet.cpp \
-    io/qscreenscanner.cpp
+    io/qscreenscanner.cpp \
+    controller/qtaikobotworker.cpp \
+    controller/qtaikobotasync.cpp \
+    controller/qtaikobotsync.cpp \
+    controller/qtaikobot.cpp
 
 HEADERS += \
         widget.h \
     io/windowhandler.h \
     io/keysender.h \
-    controller/qosubot.h \
-    ui/qosubotwidget.h \
+    ui/qtaikobotwidget.h \
     ai/neural/neuralnet.h \
-    io/qscreenscanner.h
+    io/qscreenscanner.h \
+    controller/qtaikobotworker.h \
+    controller/qtaikobotasync.h \
+    controller/qtaikobotsync.h \
+    controller/qtaikobot.h

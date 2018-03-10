@@ -1,29 +1,18 @@
-#include "qosubot.h"
+#include "qtaikobotsync.h"
 
-QOsuBot::QOsuBot(long pid, QObject *parent) : QObject(parent)
-{
-    w = new WindowHandler(pid,this);
-    s = new KeySender(this);
-}
-
-void QOsuBot::setup(QVector<Coord> coords)
+QTaikoBotSync::QTaikoBotSync(QString process, QObject *parent) : QTaikoBot(process, parent)
 {
 
 }
 
-void QOsuBot::setCoords(QVector<Coord> coords)
+QColor QTaikoBotSync::getPixel(int x, int y, int id)
 {
-    this->coords = coords;
-}
-
-QColor QOsuBot::getPixel(int x, int y, int id)
-{
-    QPixmap p = w->getPixel(x,y);
+    QPixmap p = h->getPixel(x,y);
     emit pixelRead(id,p);
     return QColor(p.toImage().pixel(0,0));
 }
 
-void QOsuBot::hardRun()
+void QTaikoBotSync::start()
 {
     qreal r,g,b;
     QTime t;
@@ -37,13 +26,6 @@ void QOsuBot::hardRun()
     this->scan_time.resize(20);
     this->process_time.resize(20);
 
-    QVector<int> r_keys = {0x44, 0x4C};
-    QVector<int> b_keys = {0x53, 0x4D};
-
-    qDebug() << r_keys.size() << b_keys.size();
-
-    connect(this,SIGNAL(press(int,int,int)),s,SLOT(sendKey(int,int,int)));
-
     while(true)
     {
         bool runState;
@@ -56,7 +38,7 @@ void QOsuBot::hardRun()
 
         if(r > 0.95 && g > 0.95 && b > 0.95)
         {
-            runState = true;
+            if(!runState) runState = true;
             //Color Scan
             getPixel(390, 412, 1).getRgbF(&r,&g,&b);
 
@@ -108,9 +90,11 @@ void QOsuBot::hardRun()
             QThread::msleep(10);
         QThread::msleep(20);
     }
+
+    emit finished();
 }
 
-int QOsuBot::getMeanScan()
+int QTaikoBotSync::getMeanScan()
 {
     int t = 0;
 
@@ -120,7 +104,7 @@ int QOsuBot::getMeanScan()
     return t / this->scan_time.size();
 }
 
-int QOsuBot::getMeanProcess()
+int QTaikoBotSync::getMeanProcess()
 {
     int t = 0;
 
@@ -128,46 +112,4 @@ int QOsuBot::getMeanProcess()
         t += this->process_time[i];
 
     return t / this->process_time.size();
-}
-
-bool QOsuBot::isRed(qreal r, qreal b, qreal g)
-{
-    return (r > 0.5 && r > b);
-}
-
-bool QOsuBot::isBlue(qreal r, qreal b, qreal g)
-{
-    return (b > 0.5 && b > r);
-}
-
-void QOsuBot::run()
-{
-    QPixmap p;
-    QRgb c;
-    qreal r,g,b;
-    QTime t;
-
-    while(true)
-    {
-        t.restart();
-        for(int i=0;i<this->coords.size();i++)
-        {
-            p = w->getPixel(this->coords[i].x,this->coords[i].y);
-            c = p.toImage().pixel(0,0);
-
-            QColor(c).getRgbF(&r,&g,&b);
-            emit pixelRead(i,p);
-
-            if(r > 0.5 && b < 0.5)
-            {
-
-            }
-            else if(r < 0.5 && b > 0.5)
-            {
-
-            }
-        }
-        emit scanTime(t.elapsed());
-        QThread::msleep(10);
-    }
 }

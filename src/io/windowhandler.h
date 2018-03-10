@@ -2,6 +2,10 @@
 #define WINDOWHANDLER_H
 
 #include <windows.h>
+#include <tlhelp32.h>
+#include <cstdio>
+#include <iostream>
+
 #include <QScreen>
 #include <QPixmap>
 #include <QtGui>
@@ -12,7 +16,9 @@ class WindowHandler : public QObject
 {
     Q_OBJECT
 public:
-    WindowHandler(unsigned long pid, QObject *parent = 0);
+    WindowHandler(QString process, QObject *parent = 0);
+
+    bool handleLoaded();
 
     QPixmap getProcessScreen();
     QPixmap getPixel(int x, int y);
@@ -23,6 +29,7 @@ public:
     unsigned long getPid();
 
     static void GetWindowsOfProcess(DWORD dwId, std::vector<HWND>& vecWindows);
+    static DWORD GetPID(std::string name);
 
 public slots:
     void refreshHWND();

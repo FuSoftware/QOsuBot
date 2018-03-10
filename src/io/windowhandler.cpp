@@ -1,10 +1,16 @@
 #include "windowhandler.h"
 
-WindowHandler::WindowHandler(unsigned long pid, QObject *parent) : QObject(parent)
+WindowHandler::WindowHandler(QString process, QObject *parent) : QObject(parent)
 {
     s = QGuiApplication::primaryScreen();
-    this->pid = pid;
-    refreshHWND();
+    setPid(GetPID(process.toStdString()));
+
+    std::cout << "Loaded handler for " << process.toStdString() << " with PID " << this->pid << " and HWND " << this->window;
+}
+
+bool WindowHandler::handleLoaded()
+{
+    return this->window > 0;
 }
 
 void WindowHandler::refreshHWND(){
@@ -68,4 +74,29 @@ void WindowHandler::GetWindowsOfProcess(DWORD dwId, std::vector<HWND>& vecWindow
         }
     };
     WindowsOfProcess wop(dwId, &vecWindows);
+}
+
+DWORD WindowHandler::GetPID(std::string name)
+{
+    PROCESSENTRY32 entry;
+    entry.dwSize = sizeof(PROCESSENTRY32);
+
+    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+
+    if (Process32First(snapshot, &entry) == TRUE)
+    {
+        while (Process32Next(snapshot, &entry) == TRUE)
+        {
+            std::wstring ws( entry.szExeFile );
+            std::string wname( ws.begin(), ws.end() );
+
+            if (stricmp(wname.c_str(), name.c_str()) == 0)
+            {
+                return entry.th32ProcessID;
+            }
+        }
+    }
+
+    CloseHandle(snapshot);
+    return 0;
 }

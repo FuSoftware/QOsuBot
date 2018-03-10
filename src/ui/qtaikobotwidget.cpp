@@ -1,8 +1,8 @@
-#include "qosubotwidget.h"
+#include "QTaikoBotwidget.h"
 
-QOsuBotWidget::QOsuBotWidget(QVector<Coord> coordinates, QWidget *parent) : QWidget(parent)
+QTaikoBotWidget::QTaikoBotWidget(QString executable, QWidget *parent) : QWidget(parent)
 {
-    this->bot = new QOsuBot(5844);
+    this->bot = new QTaikoBotAsync(executable);
     scan = new QLabel("Time", this);
     process = new QLabel("Time", this);
     running = new QLabel("Run State", this);
@@ -17,14 +17,12 @@ QOsuBotWidget::QOsuBotWidget(QVector<Coord> coordinates, QWidget *parent) : QWid
     QHBoxLayout *pixelLayout = new QHBoxLayout;
     layout->addLayout(pixelLayout);
 
-    for(int i=0;i<coordinates.size();i++)
+    for(int i=0;i<2;i++)
     {
         QLabel *l = new QLabel(this);
         this->pixels.push_back(l);
         pixelLayout->addWidget(l);
     }
-
-    this->coordinates = coordinates;
 
     connect(pb,SIGNAL(clicked(bool)),this,SLOT(start()));
 
@@ -33,19 +31,21 @@ QOsuBotWidget::QOsuBotWidget(QVector<Coord> coordinates, QWidget *parent) : QWid
 
     connect(bot,SIGNAL(pixelRead(int,QPixmap)),this,SLOT(onPixel(int,QPixmap)));
     connect(bot,SIGNAL(running(bool)),this,SLOT(onRunning(bool)));
+
+    this->resize(300,300);
 }
 
-void QOsuBotWidget::onScan(int elapsed)
+void QTaikoBotWidget::onScan(int elapsed)
 {
     this->scan->setText(QString("Scan : ") + QString::number(elapsed) + QString("ms"));
 }
 
-void QOsuBotWidget::onProcess(int elapsed)
+void QTaikoBotWidget::onProcess(int elapsed)
 {
     this->process->setText(QString("Process :") + QString::number(elapsed) + QString("ms"));
 }
 
-void QOsuBotWidget::onRunning(bool running)
+void QTaikoBotWidget::onRunning(bool running)
 {
     if(running)
         this->running->setText("Running");
@@ -54,19 +54,18 @@ void QOsuBotWidget::onRunning(bool running)
 
 }
 
-void QOsuBotWidget::onPixel(int id, QPixmap value)
+void QTaikoBotWidget::onPixel(int id, QPixmap value)
 {
     this->pixels[id]->setPixmap(value.scaled(50,50));
 }
 
-void QOsuBotWidget::start()
+void QTaikoBotWidget::start()
 {
     QThread *t = new QThread(this);
-    this->bot->setCoords(this->coordinates);
     this->bot->moveToThread(t);
 
     //Thread Management
-    connect(t, SIGNAL(started()),  this->bot, SLOT(hardRun()));
+    connect(t, SIGNAL(started()),  this->bot, SLOT(start()));
     connect(this->bot, SIGNAL(finished()), t, SLOT(quit()));
     connect(this->bot, SIGNAL(finished()), this->bot, SLOT(deleteLater()));
     connect(t, SIGNAL(finished()), t, SLOT(deleteLater()));
